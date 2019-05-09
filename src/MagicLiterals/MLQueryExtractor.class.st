@@ -3,15 +3,24 @@ I use an heuristic to extract queries from a SQL script.
 "
 Class {
 	#name : #MLQueryExtractor,
-	#superclass : #Object,
+	#superclass : #MLBasicQueryExtractor,
 	#instVars : [
-		'sourceFile',
-		'targetFile',
 		'pattern',
 		'parserSelector'
 	],
 	#category : #MagicLiterals
 }
+
+{ #category : #csv }
+MLQueryExtractor class >> csvReaderOn: aStream [
+	^ (NeoCSVReader on: aStream)
+			recordClass: MLDatasetItem;
+			addField: #queryString: converter: [ :base64String | base64String base64Decoded asString ];
+			addIntegerField: #startIndexInSource:;
+			addIntegerField: #endIndexInSource:;
+			addIgnoredField;
+			yourself
+]
 
 { #category : #extraction }
 MLQueryExtractor >> extractASTFrom: aString [
@@ -41,15 +50,15 @@ MLQueryExtractor >> extractToTargetFile [
 	self targetFile writeStreamDo: [ :s |
 		|csvWriter|
 		csvWriter := NeoCSVWriter on: s.
-		csvWriter nextPut: #('Start character position' 'End character position' 'Base64-encoded UTF8 Query' 'Pattern used for extraction').
+		csvWriter nextPut: #('Base64-encoded UTF8 Query' 'Start character position' 'End character position' 'Pattern used for extraction').
 		self extractIndexesToQueriesAssociations collect: [ :assoc |
 			|index ast|
 			index := assoc key.
 			ast := assoc value.
 			(ast isKindOf: Exception)
 				ifFalse: [ 
-					csvWriter nextPut: { index . index + (ast endPosition - (ast startPosition - 1)) . ast sourceCode asByteArray base64Encoded . self pattern } ]
-				ifTrue: [ csvWriter nextPut: { index . -1 . '' . self pattern } ] ] ].
+					csvWriter nextPut: { ast sourceCode asByteArray base64Encoded. index . index + (ast endPosition - (ast startPosition - 1)) . self pattern } ]
+				ifTrue: [ csvWriter nextPut: { ''. index . -1 . self pattern } ] ] ].
 ]
 
 { #category : #guessing }
@@ -78,24 +87,4 @@ MLQueryExtractor >> pattern [
 { #category : #accessing }
 MLQueryExtractor >> pattern: anObject [
 	pattern := anObject
-]
-
-{ #category : #accessing }
-MLQueryExtractor >> sourceFile [
-	^ sourceFile
-]
-
-{ #category : #accessing }
-MLQueryExtractor >> sourceFile: anObject [
-	sourceFile := anObject
-]
-
-{ #category : #accessing }
-MLQueryExtractor >> targetFile [
-	^ targetFile
-]
-
-{ #category : #accessing }
-MLQueryExtractor >> targetFile: anObject [
-	targetFile := anObject
 ]

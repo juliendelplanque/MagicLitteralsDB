@@ -8,14 +8,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-MLDataset class >> loadFrom: aFileReference [
+MLDataset class >> loadFrom: aFileReference extractor: anExtractorClass [
 	^ aFileReference readStreamDo: [ :s |
-		((NeoCSVReader on: s)
-			recordClass: MLDatasetItem;
-			addIntegerField: #startIndexInSource:;
-			addIntegerField: #endIndexInSource:;
-			addField: #queryString: converter: [ :base64String | base64String base64Decoded asString ];
-			addField: #pattern:;
+		((anExtractorClass csvReaderOn: s)
 			skipHeader;
 			upToEnd) in: [ :items |
 				self new

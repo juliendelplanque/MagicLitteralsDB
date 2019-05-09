@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'queryString',
 		'startIndexInSource',
-		'endIndexInSource',
-		'pattern'
+		'endIndexInSource'
 	],
 	#category : #MagicLiterals
 }
@@ -18,16 +17,6 @@ MLDatasetItem >> endIndexInSource [
 { #category : #accessing }
 MLDatasetItem >> endIndexInSource: anObject [
 	endIndexInSource := anObject
-]
-
-{ #category : #accessing }
-MLDatasetItem >> pattern [
-	^ pattern
-]
-
-{ #category : #accessing }
-MLDatasetItem >> pattern: anObject [
-	pattern := anObject
 ]
 
 { #category : #accessing }
