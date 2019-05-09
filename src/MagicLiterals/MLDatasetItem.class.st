@@ -19,6 +19,17 @@ MLDatasetItem >> endIndexInSource: anObject [
 	endIndexInSource := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+MLDatasetItem >> gtSourceCodeIn: composite [
+	<gtInspectorPresentationOrder: 0>
+	^ composite text
+		title: 'Query';
+		display: [ self  ];
+		format: [ :item | item queryString ];
+		withLineNumbers: true;
+		yourself
+]
+
 { #category : #accessing }
 MLDatasetItem >> queryString [
 	^ queryString

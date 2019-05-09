@@ -13,6 +13,18 @@ MLBasicQueryExtractor class >> csvReaderOn: aStream [
 	^ self subclassResponsibility
 ]
 
+{ #category : #loading }
+MLBasicQueryExtractor class >> load: aFileReference [
+	^ self loader load: aFileReference
+]
+
+{ #category : #loading }
+MLBasicQueryExtractor class >> loader [
+	^ MLDatasetLoader new
+		extractorClass: self;
+		yourself
+]
+
 { #category : #extraction }
 MLBasicQueryExtractor >> extractToTargetFile [
 	self subclassResponsibility
