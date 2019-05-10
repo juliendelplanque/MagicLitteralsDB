@@ -10,6 +10,15 @@ Class {
 }
 
 { #category : #accessing }
+MLDatasetItem >> ast [
+	^ [ 
+		PostgreSQLParser parseCRUDQuery: (self queryString ifNil: [ MLNullQuery new ])
+	]
+		on: Error
+		do: [ MLNullQuery new ]
+]
+
+{ #category : #accessing }
 MLDatasetItem >> endIndexInSource [
 	^ endIndexInSource
 ]
