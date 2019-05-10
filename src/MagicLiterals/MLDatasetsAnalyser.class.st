@@ -11,8 +11,13 @@ Class {
 }
 
 { #category : #analyzing }
+MLDatasetsAnalyser class >> allClauseTypes [
+	^ #('ALL' 'DISTINCT' 'EXCEPT' 'FETCH' 'FOR' 'FROM' 'GROUPBY' 'HAVING' 'INTERSECT' 'INTO' 'LIMIT' 'OFFSET' 'ONCONFLICT' 'ORDERBY' 'RETURNING' 'SELECT' 'SET' 'UNION' 'USING' 'VALUES' 'WHERE' 'WITH')
+]
+
+{ #category : #analyzing }
 MLDatasetsAnalyser >> allClauseTypes [
-	^ #('ALL' 'DISTINCT' 'EXCEPT' 'FETCH' 'FOR' 'FROM' 'GROUPBY' 'HAVING' 'INTERSECT' 'INTO' 'LIMIT' 'OFFSET' 'ONCONFLICT' 'ORDERBY' 'RETURNING' 'SELECT' 'SET' 'UNION' 'USING' 'VALUES' 'WHERE' 'WHERE' 'WITH')
+	^ self class allClauseTypes
 ]
 
 { #category : #analyzing }
