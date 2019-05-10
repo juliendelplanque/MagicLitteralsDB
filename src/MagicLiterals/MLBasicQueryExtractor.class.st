@@ -25,6 +25,13 @@ MLBasicQueryExtractor class >> loader [
 		yourself
 ]
 
+{ #category : #loading }
+MLBasicQueryExtractor class >> loaderForFile: aFileReference [
+	^ self loader
+			csvFileToLoad: aFileReference;
+			yourself
+]
+
 { #category : #extraction }
 MLBasicQueryExtractor >> extractToTargetFile [
 	self subclassResponsibility
