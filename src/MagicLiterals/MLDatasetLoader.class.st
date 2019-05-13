@@ -30,13 +30,7 @@ MLDatasetLoader >> extractorClass: anObject [
 
 { #category : #actions }
 MLDatasetLoader >> load [
-	^ self csvFileToLoad readStreamDo: [ :s |
-		((self extractorClass csvReaderOn: s)
-			skipHeader;
-			upToEnd) in: [ :items |
-				MLDataset new
-					items: items;
-					yourself ] ]
+	^ MLDataset loadFrom: self csvFileToLoad extractor: self extractorClass
 ]
 
 { #category : #actions }

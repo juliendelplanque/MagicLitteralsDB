@@ -2,7 +2,8 @@ Class {
 	#name : #MLDataset,
 	#superclass : #Object,
 	#instVars : [
-		'items'
+		'items',
+		'sourceFile'
 	],
 	#category : #MagicLiterals
 }
@@ -15,6 +16,7 @@ MLDataset class >> loadFrom: aFileReference extractor: anExtractorClass [
 			upToEnd) in: [ :items |
 				self new
 					items: items;
+					sourceFile: aFileReference;
 					yourself ] ].
 ]
 
@@ -26,4 +28,14 @@ MLDataset >> items [
 { #category : #accessing }
 MLDataset >> items: anObject [
 	items := anObject
+]
+
+{ #category : #accessing }
+MLDataset >> sourceFile [
+	^ sourceFile
+]
+
+{ #category : #accessing }
+MLDataset >> sourceFile: anObject [
+	sourceFile := anObject
 ]

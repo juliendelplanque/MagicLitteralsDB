@@ -40,7 +40,7 @@ MLDatasetsAnalyser >> analyzeDataset: aMLDataset [
 				do:
 					[ :clauseType | clauseTypeToLiteralsCount at: clauseType ifAbsentPut: 0 ].
 			{aMLDatasetItem queryString ifNotNil: [ :s | s asByteArray base64Encoded ].
-			ast queryType}
+			ast queryType. aMLDataset sourceFile pathString }
 				,
 					((clauseTypeToLiteralsCount associations sorted: #key asSortFunction)
 						collect: #value) ]
@@ -60,6 +60,6 @@ MLDatasetsAnalyser >> loaders: anObject [
 MLDatasetsAnalyser >> writeToCSVFile: aFileReference [
 	aFileReference writeStreamDo: [ :stream |
 		(NeoCSVWriter on: stream)
-			nextPut: { 'Base64-encoded UTF8 Query'. 'Query type' } , self allClauseTypes;
+			nextPut: { 'Base64-encoded UTF8 Query'. 'Query type'. 'Project' } , self allClauseTypes;
 			nextPutAll: self analyze ]
 ]
