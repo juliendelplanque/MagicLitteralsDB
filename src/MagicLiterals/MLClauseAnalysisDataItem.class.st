@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'query',
 		'queryType',
+		'sourceFile',
 		'clauseTypeToLiteralCount'
 	],
 	#category : #MagicLiterals
@@ -52,4 +53,14 @@ MLClauseAnalysisDataItem >> queryType [
 { #category : #accessing }
 MLClauseAnalysisDataItem >> queryType: anObject [
 	queryType := anObject
+]
+
+{ #category : #accessing }
+MLClauseAnalysisDataItem >> sourceFile [
+	^ sourceFile
+]
+
+{ #category : #accessing }
+MLClauseAnalysisDataItem >> sourceFile: anObject [
+	sourceFile := anObject
 ]
