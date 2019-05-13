@@ -31,6 +31,12 @@ MLDataset >> items: anObject [
 ]
 
 { #category : #accessing }
+MLDataset >> projectName [
+	"The name of the project under analysis is the name of parent's parents directory."
+	^ self sourceFile parent parent basename
+]
+
+{ #category : #accessing }
 MLDataset >> sourceFile [
 	^ sourceFile
 ]

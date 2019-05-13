@@ -1,8 +1,8 @@
 "
-I analyse a collection of datasets and provide statistics about them.
+I aggregate a collection of datasets to allow to store them all in a single csv file.
 "
 Class {
-	#name : #MLDatasetsAnalyser,
+	#name : #MLDatasetsAggregator,
 	#superclass : #Object,
 	#instVars : [
 		'loaders'
@@ -11,23 +11,29 @@ Class {
 }
 
 { #category : #analyzing }
-MLDatasetsAnalyser class >> allClauseTypes [
+MLDatasetsAggregator class >> allClauseTypes [
 	^ #('ALL' 'DISTINCT' 'EXCEPT' 'FETCH' 'FOR' 'FROM' 'GROUPBY' 'HAVING' 'INTERSECT' 'INTO' 'LIMIT' 'OFFSET' 'ONCONFLICT' 'ORDERBY' 'RETURNING' 'SELECT' 'SET' 'UNION' 'USING' 'VALUES' 'WHERE' 'WITH')
 ]
 
-{ #category : #analyzing }
-MLDatasetsAnalyser >> allClauseTypes [
+{ #category : #writing }
+MLDatasetsAggregator class >> csvHeader [
+	^ {'Base64-encoded UTF8 Query' . 'Query type' . 'Project name'}
+		, self allClauseTypes
+]
+
+{ #category : #accessing }
+MLDatasetsAggregator >> allClauseTypes [
 	^ self class allClauseTypes
 ]
 
 { #category : #analyzing }
-MLDatasetsAnalyser >> analyze [
+MLDatasetsAggregator >> analyze [
 	^ self loaders flatCollect: [ :loader |
 		self analyzeDataset: loader load ]
 ]
 
 { #category : #analyzing }
-MLDatasetsAnalyser >> analyzeDataset: aMLDataset [
+MLDatasetsAggregator >> analyzeDataset: aMLDataset [
 	| clauseTypeToLiteralsCount |
 	^ aMLDataset items
 		collect: [ :aMLDatasetItem | 
@@ -40,26 +46,32 @@ MLDatasetsAnalyser >> analyzeDataset: aMLDataset [
 				do:
 					[ :clauseType | clauseTypeToLiteralsCount at: clauseType ifAbsentPut: 0 ].
 			{aMLDatasetItem queryString ifNotNil: [ :s | s asByteArray base64Encoded ].
-			ast queryType. aMLDataset sourceFile pathString }
+			ast queryType. aMLDataset projectName }
 				,
 					((clauseTypeToLiteralsCount associations sorted: #key asSortFunction)
 						collect: #value) ]
 ]
 
 { #category : #accessing }
-MLDatasetsAnalyser >> loaders [
+MLDatasetsAggregator >> csvHeader [
+	^ self class csvHeader
+]
+
+{ #category : #accessing }
+MLDatasetsAggregator >> loaders [
 	^ loaders
 ]
 
 { #category : #accessing }
-MLDatasetsAnalyser >> loaders: anObject [
+MLDatasetsAggregator >> loaders: anObject [
 	loaders := anObject
 ]
 
 { #category : #writing }
-MLDatasetsAnalyser >> writeToCSVFile: aFileReference [
-	aFileReference writeStreamDo: [ :stream |
-		(NeoCSVWriter on: stream)
-			nextPut: { 'Base64-encoded UTF8 Query'. 'Query type'. 'Project' } , self allClauseTypes;
-			nextPutAll: self analyze ]
+MLDatasetsAggregator >> writeToCSVFile: aFileReference [
+	aFileReference
+		writeStreamDo: [ :stream | 
+			(NeoCSVWriter on: stream)
+				nextPut: self csvHeader;
+				nextPutAll: self analyze ]
 ]
